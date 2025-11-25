@@ -6,10 +6,10 @@ FROM node:18-alpine AS frontend-builder
 WORKDIR /app/frontend
 
 # Copy frontend package files
-COPY frontend/package.json frontend/package-lock.json ./
+COPY frontend/package.json frontend/package-lock.json* ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy frontend source
 COPY frontend/src ./src
@@ -31,10 +31,10 @@ RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
 # Copy backend files
-COPY backend/package.json backend/package-lock.json ./
+COPY backend/package.json backend/package-lock.json* ./
 
 # Install backend dependencies
-RUN npm ci --only=production
+RUN npm install --omit=dev
 
 # Copy backend source
 COPY backend/ ./
