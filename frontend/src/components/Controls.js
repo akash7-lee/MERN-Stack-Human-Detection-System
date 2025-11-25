@@ -1,25 +1,28 @@
+
 import React, { useRef } from 'react';
 
 const Controls = ({ model, detectionMode, setDetectionMode, setStats, onSaveDetection }) => {
   const fileInputRef = useRef(null);
 
   const handleWebcam = () => {
+    console.log('Webcam button clicked!'); // Debug log
     setDetectionMode('webcam');
   };
 
   const handleStop = () => {
+    console.log('Stop button clicked!'); // Debug log
     setDetectionMode('stopped');
     setStats({ peopleCount: 0, confidence: 0, fps: 0 });
   };
 
   const handleImageUpload = async (e) => {
+    console.log('File selected!'); // Debug log
     const file = e.target.files[0];
     if (!file) return;
 
-    // Check if model is loaded
     if (!model) {
-      alert('Model is still loading. Please wait and try again.');
-      e.target.value = ''; // Reset file input
+      alert('⏳ Model is still loading. Please wait and try again.');
+      e.target.value = '';
       return;
     }
 
@@ -49,40 +52,38 @@ const Controls = ({ model, detectionMode, setDetectionMode, setStats, onSaveDete
           });
 
           alert(`✅ Detected ${people.length} person(s) and saved to database!`);
-          
-          // Reset file input
           e.target.value = '';
         } catch (error) {
           console.error('Detection error:', error);
-          alert('Error detecting people in image. Please try again.');
+          alert('❌ Error detecting people in image. Please try again.');
         }
       };
-      
-      img.onerror = () => {
-        alert('Error loading image. Please try a different file.');
-        e.target.value = '';
-      };
-      
       img.src = event.target.result;
     };
-    
-    reader.onerror = () => {
-      alert('Error reading file. Please try again.');
-      e.target.value = '';
-    };
-    
     reader.readAsDataURL(file);
   };
 
   return (
     <div className="controls">
-      <button onClick={handleWebcam} disabled={detectionMode === 'webcam' || !model}>
+      <button 
+        onClick={handleWebcam} 
+        disabled={detectionMode === 'webcam' || !model}
+        style={{ pointerEvents: 'auto' }}
+      >
         📹 Start Webcam
       </button>
-      <button onClick={handleStop} disabled={detectionMode !== 'webcam'}>
+      <button 
+        onClick={handleStop} 
+        disabled={detectionMode !== 'webcam'}
+        style={{ pointerEvents: 'auto' }}
+      >
         ⏹️ Stop
       </button>
-      <button onClick={() => fileInputRef.current.click()} disabled={!model}>
+      <button 
+        onClick={() => fileInputRef.current?.click()} 
+        disabled={!model}
+        style={{ pointerEvents: 'auto' }}
+      >
         📁 Upload Image
       </button>
       <input
